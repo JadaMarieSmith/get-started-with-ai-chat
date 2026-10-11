@@ -4,16 +4,25 @@
 import csv
 import json
 import os
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
-from azure.identity.aio import DefaultAzureCredential
 
-from util import ChatRequest, Message
-from search_index_manager import SearchIndexManager
 from azure.ai.projects.aio import AIProjectClient
 from azure.core.exceptions import ResourceNotFoundError, HttpResponseError
-import tempfile
+from azure.identity.aio import DefaultAzureCredential
 from ddt import ddt, data
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = PROJECT_ROOT / 'src'
+for candidate in (str(SRC_ROOT), str(PROJECT_ROOT)):
+    if candidate not in sys.path:
+        sys.path.insert(0, candidate)
+
+from api.search_index_manager import SearchIndexManager
+from api.util import ChatRequest, Message
 
 
 class MockAsyncIterator:
